@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include<unistd.h>
 #include<string.h>
-
+#include<ctype.h>
 int operator(char c){
     switch (c){
         case '+':   
@@ -45,7 +45,15 @@ int keyword(char c[])
 
     return 0;
 }
-
+int constant(char c[]){
+	for(int i=0;i<strlen(c);i++){
+		if (isdigit(c[i]))
+			continue;
+		else
+			return 0;
+	}
+	return 1;
+}
 int flag2 = 0; //For handling multiline comment
 void main(){
 	FILE *f1;
@@ -89,7 +97,9 @@ void main(){
         for (int i = 0; i < strlen(line); i++){
         	if (operator(line[i]) || delim(line[i]) || line[i] == ' ' || line[i] == '\t' || line[i] == '\n'){
         		if (strcmp(c,"") != 0){
-        			if (keyword(c))
+        			if (constant(c))
+        				printf("%s : Constant\n", c);
+        			else if (keyword(c))
         				printf("%s : Keyword\n", c);
         			else
         				printf("%s : Identifier\n", c);
@@ -109,4 +119,3 @@ void main(){
 	}
 			
 }
-
